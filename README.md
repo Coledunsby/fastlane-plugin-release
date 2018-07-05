@@ -20,19 +20,28 @@ Extends fastlane release actions. Automates the steps to create a new release fo
 
 ### make_release
 
+|parameter|optional|default|description|
+|---------|--------|-------|-----------|
+|xcodeproj|false||The path of the xcode project|
+|podspec|false||The path of the podspec|
+|allow_warnings|true|`true`|Allow warnings during pod push|
+|bump_build|true|`false`|Increments the build number; optional|
+|ensure_git_branch|true|`"master"`|The branch that should be checked for|
+|ensure_git_status_clean|true|`true`|Raises an exception if there are uncommitted git changes|
+|podspec_repo|true|`"Trunk"`|The podspec repo|
+|sources|true|`["https://github.com/CocoaPods/Specs"]`|The sources of repos you want the pod spec to lint with|
+|tag_prefix|true|`""`|A prefix to be added to the version tag (e.g. "v/")|
+|version|true|`nil`|Change to a specific version. Cannot be used in conjuction with version_bump_type|
+|version_bump_type|true|`"patch"`|The type of this version bump. Available: patch, minor, major|
+
+
+A typical use case could look something like this:
 ```ruby
 make_release(
-    allow_warnings: true,           # Allow warnings during pod push; optional; default = true
-    bump_build: false,              # Increments the build number; optional; default = false
-    ensure_git_branch: "master",    # The branch that should be checked for; optional; default = "master"
-    ensure_git_status_clean: true,  # Raises an exception if there are uncommitted git changes; optional; default = true
-    podspec: "Nitrous.podspec",     # The path of the podspec; mandatory
-    podspec_repo: "coledunsby",     # The podspec repo; optional; default = "Trunk"
-    sources: [...],                 # The sources of repos you want the pod spec to lint with; optional; default = ["https://github.com/CocoaPods/Specs"]
-    tag_prefix: "v/",               # A prefix to be added to the version tag (e.g. "v/"); optional; default = ""
-    version: "2.0.2",               # Change to a specific version. Cannot be used in conjuction with version_bump_type; optional; default = nil
-    version_bump_type: "patch",     # The type of this version bump. Available: patch, minor, major; optional; default = "patch"
-    xcodeproj: "Nitrous.xcodeproj"  # The path of the xcode project; mandatory
+    xcodeproj: "Nitrous.xcodeproj",
+    podspec: "Nitrous.podspec",
+    podspec_repo: "coledunsby",
+    tag_prefix: "v/"
 )
 ```
 
