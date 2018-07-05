@@ -14,7 +14,17 @@ fastlane add_plugin release
 
 ## About release
 
-Extends fastlane release actions. Automates the steps to create a new release for a framework.
+Extends fastlane release actions. Automates the steps to create a new release for a framework. At a high level, it goes through these steps:
+
+ 1) Increments podspec version
+ 2) Increments xcodeproj version
+ 3) Increments xcodeproj build (opt-in)
+ 4) Commits version bumps
+ 5) Tags release
+ 6) Pushes to remote
+ 7) Pushes podspec
+ 
+See below for customization options...
 
 ## Actions
 
