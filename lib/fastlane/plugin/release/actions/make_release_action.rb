@@ -8,17 +8,35 @@ module Fastlane
         class MakeReleaseAction < Action
 
             def self.run(params)
-
                 other_action.ensure_git_branch(branch: params[:ensure_git_branch])
                 other_action.ensure_git_status_clean if params[:ensure_git_status_clean]
 
+                if params[:pre_bump]
+                    version = bump_version(params, params[:version])
+                end
+
+                version = tag_and_release(params)
+
+                if params[:post_bump]
+                    version = bump_version(params, nil)
+                end
+
+                version
+            end
+
+            def self.bump_version(params, version)
                 podspec = File.expand_path(params[:podspec])
-                version = params[:version]
 
                 if version.nil?
-                    version = other_action.version_bump_podspec(path: podspec, bump_type: params[:version_bump_type])
+                    version = other_action.version_bump_podspec(
+                        path: podspec,
+                        bump_type: params[:version_bump_type]
+                    )
                 else
-                    other_action.version_bump_podspec(path: podspec, version_number: version)
+                    other_action.version_bump_podspec(
+                        path: podspec,
+                        version_number: version
+                    )
                 end
 
                 xcodeproj = File.expand_path(params[:xcodeproj])
@@ -29,6 +47,15 @@ module Fastlane
                 end
 
                 other_action.commit_version_bump(include: [params[:podspec]])
+                other_action.push_to_git_remote
+
+                version
+            end
+
+            def self.tag_and_release(params)
+                podspec = File.expand_path(params[:podspec])
+                version = other_action.version_get_podspec(path: podspec)
+
                 other_action.add_git_tag(tag: params[:tag_prefix] + version)
                 other_action.push_to_git_remote
 
@@ -40,7 +67,6 @@ module Fastlane
                 )
 
                 version
-
             end
 
             def self.description
@@ -112,6 +138,23 @@ module Fastlane
                         type: String
                     ),
                     FastlaneCore::ConfigItem.new(
+                        key: :post_bump,
+                        env_name: "POST_BUMP",
+                        default_value: false,
+                        description: "Bump version number after tag and release",
+                        optional: true,
+                        type: Boolean
+                    ),
+                    FastlaneCore::ConfigItem.new(
+                        key: :pre_bump,
+                        env_name: "PRE_BUMP",
+                        conflicting_options: [:version],
+                        default_value: false,
+                        description: "Bump version number before tag and release",
+                        optional: true,
+                        type: Boolean
+                    ),
+                    FastlaneCore::ConfigItem.new(
                         key: :sources,
                         env_name: "SOURCES",
                         default_value: ["https://github.com/CocoaPods/Specs"],
@@ -130,7 +173,7 @@ module Fastlane
                     FastlaneCore::ConfigItem.new(
                         key: :version,
                         env_name: "VERSION",
-                        conflicting_options: [:version_bump_type],
+                        conflicting_options: [:pre_bump, :version_bump_type],
                         description: "Change to a specific version. This will replace the bump type value",
                         optional: true,
                         type: String
