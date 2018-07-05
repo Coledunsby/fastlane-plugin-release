@@ -58,6 +58,16 @@ make_release(
 )
 ```
 
+This will:
+ 1) Tag the release (e.g. "v/2.0.0")
+ 2) Push the tag to remote
+ 3) Push the podspec
+ 4) Increment the podspec version
+ 5) Increment the xcodeproj version
+ 6) Commit the version bumps
+ 7) Push the commit to remote
+ 
+
 ## Issues and Feedback
 
 For any other issues and feedback about this plugin, please submit it to this repository.
