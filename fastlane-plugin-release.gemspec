@@ -11,17 +11,12 @@ Gem::Specification.new do |spec|
   spec.email         = 'coledunsby@gmail.com'
 
   spec.summary       = 'Automates the steps to create a new release for a project.'
-  # spec.homepage      = "https://github.com/<GITHUB_USERNAME>/fastlane-plugin-release"
+  spec.homepage      = "https://github.com/Coledunsby/fastlane-plugin-release"
   spec.license       = "MIT"
 
   spec.files         = Dir["lib/**/*"] + %w(README.md LICENSE)
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
-
-  # Don't add a dependency to fastlane or fastlane_re
-  # since this would cause a circular dependency
-
-  # spec.add_dependency 'your-dependency', '~> 1.0.0'
 
   spec.add_development_dependency('pry')
   spec.add_development_dependency('bundler')

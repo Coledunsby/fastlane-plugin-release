@@ -1,5 +1,5 @@
 module Fastlane
-  module Release
-    VERSION = "0.1.0"
-  end
+    module Release
+        VERSION = "0.1.0"
+    end
 end

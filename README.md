@@ -1,6 +1,8 @@
-# release plugin
+# release fastlane plugin
 
-[![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-release)
+[![License](https://img.shields.io/github/license/Coledunsby/fastlane-plugin-release.svg)](https://github.com/Coledunsby/fastlane-plugin-release/blob/master/LICENSE)
+[![Gem](https://img.shields.io/gem/v/fastlane-plugin-release.svg?style=flat)](http://rubygems.org/gems/fastlane-plugin-release)
+[![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-podspec_dependency_versioning)
 
 ## Getting Started
 
@@ -12,27 +14,26 @@ fastlane add_plugin release
 
 ## About release
 
-Automates the steps to create a new release for a project.
+Extends fastlane release actions. Automates the steps to create a new release for a framework.
 
-**Note to author:** Add a more detailed description about this plugin here. If your plugin contains multiple actions, make sure to mention them here.
+## Actions
 
-## Example
+### make_release
 
-Check out the [example `Fastfile`](fastlane/Fastfile) to see how to use this plugin. Try it by cloning the repo, running `fastlane install_plugins` and `bundle exec fastlane test`.
-
-**Note to author:** Please set up a sample project to make it easy for users to explore what your plugin does. Provide everything that is necessary to try out the plugin in this project (including a sample Xcode/Android project if necessary)
-
-## Run tests for this plugin
-
-To run both the tests, and code style validation, run
-
-```
-rake
-```
-
-To automatically fix many of the styling issues, use
-```
-rubocop -a
+```ruby
+make_release(
+    allow_warnings: true,           # Allow warnings during pod push; optional; default = true
+    bump_build: false,              # Increments the build number; optional; default = false
+    ensure_git_branch: "master",    # The branch that should be checked for; optional; default = "master"
+    ensure_git_status_clean: true,  # Raises an exception if there are uncommitted git changes; optional; default = true
+    podspec: "Nitrous.podspec",     # The path of the podspec; mandatory
+    podspec_repo: "coledunsby",     # The podspec repo; optional; default = "Trunk"
+    sources: [...],                 # The sources of repos you want the pod spec to lint with; optional; default = ["https://github.com/CocoaPods/Specs"]
+    tag_prefix: "v/",               # A prefix to be added to the version tag (e.g. "v/"); optional; default = ""
+    version: "2.0.2",               # Change to a specific version. Cannot be used in conjuction with version_bump_type; optional; default = nil
+    version_bump_type: "patch",     # The type of this version bump. Available: patch, minor, major; optional; default = "patch"
+    xcodeproj: "Nitrous.xcodeproj"  # The path of the xcode project; mandatory
+)
 ```
 
 ## Issues and Feedback
