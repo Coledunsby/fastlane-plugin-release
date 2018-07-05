@@ -12,7 +12,6 @@ module Fastlane
                 other_action.ensure_git_branch(branch: params[:ensure_git_branch])
                 other_action.ensure_git_status_clean if params[:ensure_git_status_clean]
 
-                xcodeproj = File.expand_path(params[:xcodeproj])
                 podspec = File.expand_path(params[:podspec])
                 version = params[:version]
 
@@ -22,8 +21,13 @@ module Fastlane
                     other_action.version_bump_podspec(path: podspec, version_number: version)
                 end
 
-                other_action.increment_version_number(version_number: version, xcodeproj: xcodeproj)
-                other_action.increment_build_number(xcodeproj: xcodeproj) if params[:bump_build]
+                xcodeproj = File.expand_path(params[:xcodeproj])
+
+                unless xcodeproj.nil?
+                    other_action.increment_version_number(version_number: version, xcodeproj: xcodeproj)
+                    other_action.increment_build_number(xcodeproj: xcodeproj) if params[:bump_build]
+                end
+
                 other_action.commit_version_bump(include: [params[:podspec]])
                 other_action.add_git_tag(tag: params[:tag_prefix] + version)
                 other_action.push_to_git_remote
@@ -147,7 +151,7 @@ module Fastlane
                         key: :xcodeproj,
                         env_name: "XCODEPROJ",
                         description: "The path of the xcode project to update",
-                        optional: false,
+                        optional: true,
                         type: String,
                         verify_block: proc do |value|
                             UI.user_error!("Could not find xcode project at path '#{File.expand_path(value)}'") if !File.exist?(value)
