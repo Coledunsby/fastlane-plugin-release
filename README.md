@@ -16,15 +16,15 @@ fastlane add_plugin release
 
 Extends fastlane release actions. Automates the steps to create a new release for a framework. At a high level, it goes through these steps:
 
- 1) Increments podspec version
- 2) Increments xcodeproj version
- 3) Increments xcodeproj build (opt-in)
- 4) Commits version bumps
- 5) Tags release
- 6) Pushes to remote
- 7) Pushes podspec
- 
-See below for customization options...
+ - Increments podspec version
+ - Increments xcodeproj version
+ - Increments xcodeproj build (opt-in)
+ - Commits version bumps
+ - Tags release
+ - Pushes to remote
+ - Pushes podspec
+
+The order of these operations depends on the configuration. See below for customization options...
 
 ## Actions
 
@@ -32,13 +32,15 @@ See below for customization options...
 
 |parameter|optional|default|description|
 |---------|--------|-------|-----------|
-|xcodeproj|false||The path of the xcode project|
 |podspec|false||The path of the podspec|
+|xcodeproj|true||The path of the xcode project. Required for incrementing version and build number in xcodeproj|
 |allow_warnings|true|`true`|Allow warnings during pod push|
 |bump_build|true|`false`|Increments the build number; optional|
 |ensure_git_branch|true|`"master"`|The branch that should be checked for|
 |ensure_git_status_clean|true|`true`|Raises an exception if there are uncommitted git changes|
 |podspec_repo|true|`"Trunk"`|The podspec repo|
+|post_bump|true|`false`|Bump version number after tag and podspec push|
+|pre_bump|true|`false`|Bump version number before tag and podspec push|
 |sources|true|`["https://github.com/CocoaPods/Specs"]`|The sources of repos you want the pod spec to lint with|
 |tag_prefix|true|`""`|A prefix to be added to the version tag (e.g. "v/")|
 |version|true|`nil`|Change to a specific version. Cannot be used in conjuction with version_bump_type|
@@ -51,7 +53,8 @@ make_release(
     xcodeproj: "Nitrous.xcodeproj",
     podspec: "Nitrous.podspec",
     podspec_repo: "coledunsby",
-    tag_prefix: "v/"
+    tag_prefix: "v/",
+    post_bump: true
 )
 ```
 
